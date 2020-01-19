@@ -10,7 +10,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 
-const latest_news = require('./routes/latest_news');
+const news = require('./routes/news');
+const all_news = require('./routes/all_news');
 
 
 /**
@@ -20,8 +21,14 @@ app.get('/', (req, res) =>{
     return res.json( { status: true, desc: "OK" } );
 });
 
-app.get('/latest_news', latest_news );
+app.get('/news', all_news);
 
+app.get('/news/:agency/:id?', news);
+
+
+app.use(function (req, res, next) {
+    res.status(404).json({status: false, desc: "Check your request!"})
+});
 
 
 app.listen(port, () =>{
