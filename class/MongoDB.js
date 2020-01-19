@@ -171,6 +171,37 @@ class MongoDB {
    * @param data
    * @returns {Promise<any>}
    */
+  findSearch(data, limit) {
+    return new Promise((resolve, reject) => {
+      MongoClient.connect(this.URL, { useUnifiedTopology: true, useNewUrlParser: true }, (error, client) => {
+        if (error !== null) {
+          reject(false);
+          this.error = 'Not connected correctly to db!';
+        }
+
+        client
+          .db(this.databaseName)
+          .collection(this.collectionName)
+          .find(data)
+          .limit(limit)
+          .toArray((error, docs) => {
+            if (error !== null) {
+              reject(error);
+              this.error = 'Error find any object to collection';
+            }
+
+            resolve(docs);
+            client.close();
+          }); // end of collection
+      });
+    });
+  }
+
+  /**
+   *
+   * @param data
+   * @returns {Promise<any>}
+   */
   aggregate(data) {
     return new Promise((resolve, reject) => {
       MongoClient.connect(this.URL, { useUnifiedTopology: true, useNewUrlParser: true,  poolSize: 10 }, (error, client) => {

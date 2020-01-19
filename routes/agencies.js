@@ -6,6 +6,8 @@ module.exports = async function (req, res) {
         status: false,
         desc: ""
     }
+    
+    var result = [];
 
     result = await new MongoDB('db', 'agencies').find(
         {

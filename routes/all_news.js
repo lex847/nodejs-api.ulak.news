@@ -6,8 +6,8 @@ module.exports = async function (req, res) {
             status: false,
             desc: ""
         }
-
-        limit = 50
+        var result = [];
+        var limit = 50
 
         if(typeof req.query.limit !== "undefined"){
             if(req.query.limit <= 50 ){
