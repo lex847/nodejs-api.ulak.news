@@ -32,6 +32,7 @@ const news = require('./routes/news');
 const all_news = require('./routes/all_news');
 const agencies = require('./routes/agencies');
 const search = require('./routes/search');
+const login = require('./routes/login');
 
 
 /**
@@ -44,6 +45,7 @@ app.get('/news', all_news);
 app.get('/news/:agency/:id?', news);
 app.get('/agencies/', agencies);
 app.get('/search', search);
+app.post('/login', login);
 
 
 /**

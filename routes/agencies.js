@@ -7,21 +7,32 @@ module.exports = async function (req, res) {
         desc: ""
     }
     
-    var result = [];
+    const redisKey = `agencies/`;
+    req.redis.get(redisKey, async (err, reply) => {
 
-    result = await new MongoDB('db', 'agencies').find(
-        {
-            status: true
+            if (reply !== null) {
+                return res.json(JSON.parse(reply));
+            }
+
+
+        var result = [];
+
+        result = await new MongoDB('db', 'agencies').find(
+            {
+                status: true
+            }
+        );
+
+        if(result.length > 0){
+            main_response.desc = "OK";
+            main_response.result = result;
+            main_response.status = true;
+            req.redis.set(redisKey, JSON.stringify(main_response), 'EX', 3600); // seconds ttl
+        }else{
+            main_response.desc = "Not found"
         }
-    );
 
-    if(result.length > 0){
-        main_response.desc = "OK";
-        main_response.result = result;
-        main_response.status = true;
-    }else{
-        main_response.desc = "Not found"
-    }
+        return res.json(main_response);
 
-    return res.json(main_response)
+    });
 }
