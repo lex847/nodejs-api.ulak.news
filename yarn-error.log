@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.21.1/libexec/bin/yarn.js add redis
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.21.1/libexec/bin/yarn.js add moment
 
 PATH: 
   /Users/orhan/.npm-global/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Wireshark.app/Contents/MacOS:/Users/orhan/.npm-global/bin
@@ -24,6 +24,7 @@ npm manifest:
       "express": "^4.17.1",
       "mongodb": "^3.5.1",
       "morgan": "^1.9.1",
+      "redis": "^2.8.0",
       "yarn": "^1.21.1"
     }
   }
@@ -151,6 +152,11 @@ Lockfile:
     version "8.2.0"
     resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
     integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
+  
+  double-ended-queue@^2.1.0-0:
+    version "2.1.0-0"
+    resolved "https://registry.yarnpkg.com/double-ended-queue/-/double-ended-queue-2.1.0-0.tgz#103d3527fd31528f40188130c841efdd78264e5c"
+    integrity sha1-ED01J/0xUo9AGIEwyEHv3XgmTlw=
   
   ee-first@1.1.1:
     version "1.1.1"
@@ -428,6 +434,25 @@ Lockfile:
       safe-buffer "~5.1.1"
       string_decoder "~1.1.1"
       util-deprecate "~1.0.1"
+  
+  redis-commands@^1.2.0:
+    version "1.5.0"
+    resolved "https://registry.yarnpkg.com/redis-commands/-/redis-commands-1.5.0.tgz#80d2e20698fe688f227127ff9e5164a7dd17e785"
+    integrity sha512-6KxamqpZ468MeQC3bkWmCB1fp56XL64D4Kf0zJSwDZbVLLm7KFkoIcHrgRvQ+sk8dnhySs7+yBg94yIkAK7aJg==
+  
+  redis-parser@^2.6.0:
+    version "2.6.0"
+    resolved "https://registry.yarnpkg.com/redis-parser/-/redis-parser-2.6.0.tgz#52ed09dacac108f1a631c07e9b69941e7a19504b"
+    integrity sha1-Uu0J2srBCPGmMcB+m2mUHnoZUEs=
+  
+  redis@^2.8.0:
+    version "2.8.0"
+    resolved "https://registry.yarnpkg.com/redis/-/redis-2.8.0.tgz#202288e3f58c49f6079d97af7a10e1303ae14b02"
+    integrity sha512-M1OkonEQwtRmZv4tEWF2VgpG0JWJ8Fv1PhlgT5+B+uNq2cA3Rt1Yt/ryoR+vQNOQcIEgdCdfH0jr3bDpihAw1A==
+    dependencies:
+      double-ended-queue "^2.1.0-0"
+      redis-commands "^1.2.0"
+      redis-parser "^2.6.0"
   
   require_optional@^1.0.1:
     version "1.0.1"

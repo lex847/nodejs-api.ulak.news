@@ -183,6 +183,7 @@ class MongoDB {
           .db(this.databaseName)
           .collection(this.collectionName)
           .find(data)
+          .sort({date_u: -1})
           .limit(limit)
           .toArray((error, docs) => {
             if (error !== null) {

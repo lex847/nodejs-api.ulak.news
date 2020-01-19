@@ -11,7 +11,6 @@ module.exports = async function (req, res) {
 
     const redisKey = `${req.url}`;
     req.redis.get(redisKey, async (err, reply) => {
-        console.log(redisKey);
         if (reply !== null) {
             if(typeof req.params.id !== "undefined"){
                 new MongoDB('db', 'news').update( { agency: req.params.agency, id: parseInt(req.params.id) }, { $inc: { read_times: 1 } }, false );
@@ -66,7 +65,6 @@ module.exports = async function (req, res) {
                     ]
                 );
                 
-                replace = 'aip(\'pageStructure\', {\"pageUrl\":\"https:\\/\\/www.sozcu.com.tr\\/apiv2\",\"pageCanonical\":\"https:\\/\\/www.sozcu.com.tr\\/apiv2\",\"pageType\":\"diger\",\"pageIdentifier\":\"\",\"pageCategory1\":\"sozcu\",\"pageCategory2\":\"\",\"pageCategory3\":\"\",\"pageCategory4\":\"\",\"pageCategory5\":\"\",\"pageTitle\":\" - S\\u00f6zc\\u00fc Gazetesi\"});';
 
         
                 if(result.length > 0){
@@ -74,7 +72,10 @@ module.exports = async function (req, res) {
                      * increase read_times
                      */
                     new MongoDB('db', 'news').update( { agency: req.params.agency, id: parseInt(req.params.id) }, { $inc: { read_times: 1 } }, false );
-                    result[0].text = result[0].text.replace(replace, '');
+                    if(req.params.agency === "sozcu"){
+                        replace = 'aip(\'pageStructure\', {\"pageUrl\":\"https:\\/\\/www.sozcu.com.tr\\/apiv2\",\"pageCanonical\":\"https:\\/\\/www.sozcu.com.tr\\/apiv2\",\"pageType\":\"diger\",\"pageIdentifier\":\"\",\"pageCategory1\":\"sozcu\",\"pageCategory2\":\"\",\"pageCategory3\":\"\",\"pageCategory4\":\"\",\"pageCategory5\":\"\",\"pageTitle\":\" - S\\u00f6zc\\u00fc Gazetesi\"});';
+                        result[0].text = result[0].text.replace(replace, '');
+                    }
                     main_response.desc = "OK";
                     main_response.result = result;
                     main_response.status = true;

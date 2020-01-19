@@ -28,8 +28,9 @@ function redis(req, res, next) {
  
 app.use(redis);
 
-const news = require('./routes/news');
 const all_news = require('./routes/all_news');
+const news = require('./routes/news');
+const most_read = require('./routes/most_read');
 const agencies = require('./routes/agencies');
 const search = require('./routes/search');
 const login = require('./routes/login');
@@ -43,6 +44,7 @@ app.get('/', (req, res) =>{
 });
 app.get('/news', all_news);
 app.get('/news/:agency/:id?', news);
+app.post('/most_read', most_read);
 app.get('/agencies/', agencies);
 app.get('/search', search);
 app.post('/login', login);
