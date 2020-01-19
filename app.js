@@ -30,6 +30,7 @@ app.use(redis);
 
 const news = require('./routes/news');
 const all_news = require('./routes/all_news');
+const agencies = require('./routes/agencies');
 
 
 /**
@@ -40,6 +41,7 @@ app.get('/', (req, res) =>{
 });
 app.get('/news', all_news);
 app.get('/news/:agency/:id?', news);
+app.get('/agencies/', agencies);
 
 
 /**

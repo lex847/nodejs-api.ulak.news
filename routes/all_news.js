@@ -7,6 +7,14 @@ module.exports = async function (req, res) {
             desc: ""
         }
 
+        limit = 50
+
+        if(typeof req.query.limit !== "undefined"){
+            if(req.query.limit <= 50 ){
+                limit = parseInt(req.query.limit);
+            }
+        }
+
         /**
          * REQUEST BY ALL AGENCY NEWS
          */
@@ -14,8 +22,8 @@ module.exports = async function (req, res) {
         result = await new MongoDB('db', 'news').aggregate(
             [
                 { $sort: { _id: -1 } },
-                { $project: { text: false, keywords: false } },
-                { $limit: 50 }
+                { $project: { text: false, keywords: false, _id: false } },
+                { $limit: limit }
             ]
         );
 

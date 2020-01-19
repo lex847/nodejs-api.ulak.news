@@ -6,6 +6,15 @@ module.exports = async function (req, res) {
         status: false,
         desc: ""
     }
+
+
+    limit = 50
+
+    if(typeof req.query.limit !== "undefined"){
+        if(req.query.limit <= 50 ){
+            limit = parseInt(req.query.limit);
+        }
+    }
         
         /**
          * IF REQUEST BY AGENCY NEWS
@@ -16,8 +25,8 @@ module.exports = async function (req, res) {
                 [
                     { $match: { agency: req.params.agency } },
                     { $sort: { _id: -1 } },
-                    { $project: { text: false, keywords: false } },
-                    { $limit: 50 }
+                    { $project: { text: false, keywords: false, _id: false } },
+                    { $limit: limit }
                 ]
             );
     
@@ -34,10 +43,11 @@ module.exports = async function (req, res) {
             /**
              * IF GETTING BY AGENCY AND NEW ID
              */
-
+            
             result = await new MongoDB('db', 'news').aggregate(
                 [
                     { $match: { agency: req.params.agency, id: parseInt(req.params.id) } },
+                    { $project: { _id: false } },
                     { $limit: 1 }
                 ]
             );
@@ -46,6 +56,10 @@ module.exports = async function (req, res) {
 
     
             if(result.length > 0){
+                /**
+                 * increase read_times
+                 */
+                new MongoDB('db', 'news').update( { agency: req.params.agency, id: parseInt(req.params.id) }, { $inc: { read_times: 1 } }, false );
                 result[0].text = result[0].text.replace(replace, '');
                 main_response.desc = "OK";
                 main_response.result = result;
