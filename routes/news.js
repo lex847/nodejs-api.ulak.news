@@ -19,6 +19,7 @@ module.exports = async function (req, res) {
         }
 
         var result = [];
+        var related = [];
         var limit = 50
 
         if(typeof req.query.limit !== "undefined"){
@@ -35,10 +36,10 @@ module.exports = async function (req, res) {
 
                 result = await new MongoDB('db', 'news').aggregate(
                     [
-                        { $match: { agency: req.params.agency } },
+                        { $match: { agency: req.params.agency, visible: true } },
                         { $sort: { _id: -1 } },
-                        { $project: { text: false, keywords: false, _id: false } },
-                        { $limit: limit }
+                        { $limit: limit },
+                        { $project: { text: false, keywords: false, _id: false, url: false, spot: false } }
                     ]
                 );
         
@@ -60,14 +61,26 @@ module.exports = async function (req, res) {
                 result = await new MongoDB('db', 'news').aggregate(
                     [
                         { $match: { agency: req.params.agency, id: parseInt(req.params.id) } },
-                        { $project: { _id: false } },
-                        { $limit: 1 }
+                        { $limit: 1 },
+                        { $project: { _id: false } }
                     ]
                 );
-                
-
         
                 if(result.length > 0){
+
+                    var keys = [];
+
+                    result[0].keywords.map((key)=>{
+                        keys.push(new RegExp(`${key}+`, 'i'))
+                    });
+
+                    related = await new MongoDB('db', 'news').aggregate(
+                        [
+                            { $match: { keywords: { $in: keys }, visible: true } },
+                            { $limit: 5 },
+                            { $project: { _id: false, text: false, categories: false, keywords: false, saved_date: false, seo_link: false, spot: false  } }
+                        ]
+                    )
                     /**
                      * increase read_times
                      */
@@ -76,6 +89,7 @@ module.exports = async function (req, res) {
                         replace = 'aip(\'pageStructure\', {\"pageUrl\":\"https:\\/\\/www.sozcu.com.tr\\/apiv2\",\"pageCanonical\":\"https:\\/\\/www.sozcu.com.tr\\/apiv2\",\"pageType\":\"diger\",\"pageIdentifier\":\"\",\"pageCategory1\":\"sozcu\",\"pageCategory2\":\"\",\"pageCategory3\":\"\",\"pageCategory4\":\"\",\"pageCategory5\":\"\",\"pageTitle\":\" - S\\u00f6zc\\u00fc Gazetesi\"});';
                         result[0].text = result[0].text.replace(replace, '');
                     }
+                    result[0].related = related;
                     main_response.desc = "OK";
                     main_response.result = result;
                     main_response.status = true;

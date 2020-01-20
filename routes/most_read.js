@@ -20,10 +20,10 @@ module.exports = async function (req, res) {
 
     if(typeof agency === "undefined"){
         agency = "all";
-        query.push( { $match: { date_u: { $gte: gte, $lte: lte } } } );
+        query.push( { $match: { date_u: { $gte: gte, $lte: lte }, visible: true } } );
     }else{
         agency = agency.toString();
-        query.push( { $match: { date_u: { $gte: gte, $lte: lte }, agency: agency } } );
+        query.push( { $match: { date_u: { $gte: gte, $lte: lte }, agency: agency, visible: true } } );
     }
 
     const redisKey = `most_read/${agency}/${gte}/${lte}`;

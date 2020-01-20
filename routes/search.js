@@ -28,7 +28,7 @@ module.exports = async function (req, res) {
                 }
             }
 
-            result = await new MongoDB('db', 'news').findSearch( { $text: { '$search' : req.query.q.toString()  } }, limit );
+            result = await new MongoDB('db', 'news').findSearch( { $text: { '$search' : req.query.q.toString()  }, visible: true }, limit );
 
             /**
              * search log
