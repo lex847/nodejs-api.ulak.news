@@ -30,7 +30,7 @@ module.exports = async function (req, res) {
                 result = await new MongoDB('db', 'news').aggregate(
                     [
                         { $match: { visible: true } },
-                        { $sort: { _id: -1 } },
+                        { $sort: { date_u: -1 } },
                         { $limit: limit },
                         { $project: { text: false, keywords: false, _id: false } }
                     ]

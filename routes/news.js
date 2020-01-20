@@ -37,7 +37,7 @@ module.exports = async function (req, res) {
                 result = await new MongoDB('db', 'news').aggregate(
                     [
                         { $match: { agency: req.params.agency, visible: true } },
-                        { $sort: { _id: -1 } },
+                        { $sort: { date_u: -1 } },
                         { $limit: limit },
                         { $project: { text: false, keywords: false, _id: false, url: false, spot: false } }
                     ]
@@ -71,14 +71,15 @@ module.exports = async function (req, res) {
                     var keys = [];
 
                     result[0].keywords.map((key)=>{
-                        keys.push(new RegExp(`${key}+`, 'i'))
+                            keys.push(new RegExp(`${key}+`, 'i'))
                     });
 
                     related = await new MongoDB('db', 'news').aggregate(
                         [
-                            { $match: { keywords: { $in: keys }, visible: true } },
+                            { $match: { keywords: { $in: keys }, categories: { $in: result[0].categories }, visible: true } },
+                            { $sort: { date_u: 1 } },
                             { $limit: 5 },
-                            { $project: { _id: false, text: false, categories: false, keywords: false, saved_date: false, seo_link: false, spot: false  } }
+                            { $project: { _id: false, text: false, categories: false, keywords: false, saved_date: false, seo_link: false, spot: false, url: false  } }
                         ]
                     )
                     /**
