@@ -5,6 +5,7 @@ const app = express()
 const port = 5001
 require('dotenv').config();
 var moment = require('moment-timezone');
+const MongoDB = require('./class/MongoDB');
 
 
 const redis = require('redis').createClient({
@@ -29,7 +30,22 @@ function main_middleware(req, res, next) {
     next();
  }
  
-app.use(main_middleware);
+ async function check_token(req, res, next){
+    let data = [];
+    let { site, token } = req.headers;
+    if(typeof site !== "undefined" && typeof token !== "undefined"){
+        site = site.toString();
+        token = token.toString();
+        data = await new MongoDB('db', 'tokens').find({ site: site, token: token });
+        if(data.length > 0){
+            return next();
+        }
+    }
+    return res.json({ status: false, desc: "Check your token" });
+ }
+
+
+const middlewares = [main_middleware, check_token];
 
 const all_news = require('./routes/all_news');
 const news = require('./routes/news');
@@ -38,6 +54,8 @@ const most_read = require('./routes/most_read');
 const agencies = require('./routes/agencies');
 const search = require('./routes/search');
 const login = require('./routes/login');
+const categories = require('./routes/categories');
+const category = require('./routes/category');
 
 
 /**
@@ -47,12 +65,14 @@ app.get('/', (req, res) =>{
     return res.json( { status: true, desc: "OK" } );
 });
 
-app.get('/news', all_news);
-app.get('/news/:agency/:id', news);
-app.use('/comments/:agency/:id/:process', comments);
-app.post('/most_read', most_read);
-app.get('/agencies', agencies);
-app.get('/search', search);
+app.get('/news', middlewares, all_news);
+app.get('/news/:agency/:id', middlewares, news);
+app.use('/comments/:agency/:id/:process', middlewares, comments);
+app.post('/most_read', middlewares, most_read);
+app.get('/agencies', middlewares, agencies);
+app.get('/search', middlewares, search);
+app.get('/categories', middlewares, categories);
+app.get('/category/:id', middlewares, category);
 app.post('/login', login);
 
 

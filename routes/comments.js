@@ -8,7 +8,8 @@ module.exports = async function (req, res) {
 
     var main_result = {
         status: false,
-        desc: ""
+        desc: "",
+        result: []
     };
 
     var floodCheck = [];

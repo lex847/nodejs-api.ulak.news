@@ -4,7 +4,8 @@ module.exports = async function (req, res) {
 
     var main_response = {
         status: false,
-        desc: "Not Found"
+        desc: "Not Found",
+        result: []
     }
     
     if(typeof req.query.q === "undefined"){
@@ -13,7 +14,7 @@ module.exports = async function (req, res) {
 
     const redisKey = `search/${await new Buffer.from(req.query.q.toString()).toString('base64').toString()}`;
     req.redis.get(redisKey, async (err, reply) => {
-
+            
             if (reply !== null) {
                 new MongoDB('db', 'search').update( { keyword: req.query.q.toString() }, { $inc: { search_times: 1 } }, false );
                 return res.json(JSON.parse(reply));
