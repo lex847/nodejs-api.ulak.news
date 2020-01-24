@@ -2,7 +2,17 @@ const MongoDB = require('../class/MongoDB');
 
 module.exports = async function (req, res) {
 
-    const redisKey = `categories/`;
+
+    var limit = 50;
+
+    if(typeof req.query.limit !== "undefined"){
+        if(req.query.limit <= 50 ){
+            limit = parseInt(req.query.limit);
+        }
+    }
+
+
+    const redisKey = `categories/${limit}`;
     req.redis.get(redisKey, async (err, reply) => {
 
         if (reply !== null) {
@@ -35,6 +45,9 @@ module.exports = async function (req, res) {
                 $sort: {
                     'total': -1
                 }
+            },
+            {
+                $limit: limit
             }
         ]);
 

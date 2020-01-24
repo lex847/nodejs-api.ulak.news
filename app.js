@@ -5,11 +5,11 @@ const app = express()
 const port = 5001
 require('dotenv').config();
 var moment = require('moment-timezone');
-const MongoDB = require('./class/MongoDB');
+const Token = require('./class/token');
 
 
 const redis = require('redis').createClient({
-    port      : 6379,               
+    port      : process.env.REDIS_PORT,               
     host      : process.env.REDIS_HOST,
     password  : process.env.REDIS_PASS 
  });
@@ -31,17 +31,15 @@ function main_middleware(req, res, next) {
  }
  
  async function check_token(req, res, next){
-    let data = [];
-    let { site, token } = req.headers;
-    if(typeof site !== "undefined" && typeof token !== "undefined"){
-        site = site.toString();
-        token = token.toString();
-        data = await new MongoDB('db', 'tokens').find({ site: site, token: token });
-        if(data.length > 0){
+    let { authorization } = req.headers;
+    if(typeof authorization !== "undefined"){
+        authorization = authorization.toString();
+        if(new Token().verify(authorization)){
             return next();
         }
     }
-    return res.json({ status: false, desc: "Check your token" });
+
+    return res.json({ status: false, desc: "Check your token!" });
  }
 
 
@@ -53,6 +51,7 @@ const comments = require('./routes/comments');
 const most_read = require('./routes/most_read');
 const agencies = require('./routes/agencies');
 const search = require('./routes/search');
+const last_searches = require('./routes/last_searches');
 const login = require('./routes/login');
 const categories = require('./routes/categories');
 const category = require('./routes/category');
@@ -66,11 +65,12 @@ app.get('/', (req, res) =>{
 });
 
 app.get('/news', middlewares, all_news);
-app.get('/news/:agency/:id', middlewares, news);
+app.get('/news/:agency/:id?', middlewares, news);
 app.use('/comments/:agency/:id/:process', middlewares, comments);
 app.post('/most_read', middlewares, most_read);
 app.get('/agencies', middlewares, agencies);
 app.get('/search', middlewares, search);
+app.get('/last_searches', middlewares, last_searches);
 app.get('/categories', middlewares, categories);
 app.get('/category/:id', middlewares, category);
 app.post('/login', login);

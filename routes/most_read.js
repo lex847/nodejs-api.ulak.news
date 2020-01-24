@@ -11,6 +11,13 @@ module.exports = async function (req, res) {
         desc: "",
         result: []
     }
+    var limit = 5
+
+    if(typeof req.body.limit !== "undefined"){
+        if(req.body.limit <= 50 ){
+            limit = parseInt(req.body.limit);
+        }
+    }
 
     var query = [];
     
@@ -19,7 +26,7 @@ module.exports = async function (req, res) {
         return res.json(main_response);
     }
 
-    if(typeof agency === "undefined"){
+    if(typeof agency === "undefined" || agency === "all"){
         agency = "all";
         query.push( { $match: { date_u: { $gte: gte, $lte: lte }, visible: true } } );
     }else{
@@ -27,7 +34,7 @@ module.exports = async function (req, res) {
         query.push( { $match: { date_u: { $gte: gte, $lte: lte }, agency: agency, visible: true } } );
     }
 
-    const redisKey = `most_read/${agency}/${gte}/${lte}`;
+    const redisKey = `most_read/${agency}/${gte}/${lte}/${limit}`;
     req.redis.get(redisKey, async (err, reply) => {
 
                 if (reply !== null) {
@@ -35,13 +42,7 @@ module.exports = async function (req, res) {
                 }
 
                 var result = [];
-                var limit = 5
 
-                if(typeof req.body.limit !== "undefined"){
-                    if(req.body.limit <= 50 ){
-                        limit = parseInt(req.body.limit);
-                    }
-                }
                 query.push({ $sort: { read_times: -1 } });
                 query.push({ $limit: limit });
                 query.push({ $project: { _id: false } });

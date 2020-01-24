@@ -26,6 +26,7 @@ module.exports = async function (req, res) {
         );
         
         main_result.result = result;
+        main_result.desc = "Comments listed";
         main_result.status = true;
 
     }else if(process === "add"){

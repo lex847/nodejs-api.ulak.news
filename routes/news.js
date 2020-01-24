@@ -6,7 +6,8 @@ module.exports = async function (req, res) {
 
     var main_response = {
         status: false,
-        desc: ""
+        desc: "",
+        result: []
     }
 
     const redisKey = `${req.url}`;
@@ -39,7 +40,7 @@ module.exports = async function (req, res) {
                         { $match: { agency: req.params.agency, visible: true } },
                         { $sort: { date_u: -1 } },
                         { $limit: limit },
-                        { $project: { text: false, keywords: false, _id: false, url: false, spot: false } }
+                        { $project: { text: false, keywords: false, _id: false, url: false} }
                     ]
                 );
         
@@ -70,16 +71,24 @@ module.exports = async function (req, res) {
 
                     var keys = [];
 
-                    result[0].keywords.map((key)=>{
-                            keys.push(new RegExp(`${key}+`, 'i'))
-                    });
+                    if(typeof result[0].keywords !== "string"){
+                        result[0].keywords.map((key)=>{
+                                keys.push(new RegExp(`${key}+`, 'i'))
+                        });
+                    }else{
+                        result[0].keywords = result[0].keywords.split(',');
+                        result[0].keywords.map((key)=>{
+                                key = key.replace(" ", "");
+                                keys.push(new RegExp(`${key}+`, 'i'))
+                        });
+                    }
 
                     related = await new MongoDB('db', 'news').aggregate(
                         [
                             { $match: { keywords: { $in: keys }, categories: { $in: result[0].categories }, visible: true } },
                             { $sort: { date_u: -1 } },
                             { $limit: 5 },
-                            { $project: { _id: false, text: false, categories: false, keywords: false, saved_date: false, seo_link: false, spot: false, url: false  } }
+                            { $project: { _id: false, text: false, categories: false, keywords: false, saved_date: false, seo_link: false, url: false  } }
                         ]
                     )
                     /**

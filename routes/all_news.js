@@ -8,7 +8,15 @@ module.exports = async function (req, res) {
             result: []
         }
 
-        const redisKey = `news/`;
+        var limit = 50
+
+        if(typeof req.query.limit !== "undefined"){
+            if(req.query.limit <= 50 ){
+                limit = parseInt(req.query.limit);
+            }
+        }
+
+        const redisKey = `news/${limit}`;
         req.redis.get(redisKey, async (err, reply) => {
     
                 if (reply !== null) {
@@ -16,13 +24,7 @@ module.exports = async function (req, res) {
                 }
 
                 var result = [];
-                var limit = 50
 
-                if(typeof req.query.limit !== "undefined"){
-                    if(req.query.limit <= 50 ){
-                        limit = parseInt(req.query.limit);
-                    }
-                }
 
                 /**
                  * REQUEST BY ALL AGENCY NEWS

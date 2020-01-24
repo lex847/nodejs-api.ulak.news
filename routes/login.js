@@ -25,12 +25,11 @@ module.exports = async function (req, res) {
                             }
                     },
                     {
-                        $project: { _id: false, password: false, tokes: false }
+                        $project: { _id: false, password: false, tokens: false }
                     }
                 ]
             );
-    } 
-
+    }
     
             if(result.length > 0){
                 main_response.desc = "OK";
@@ -43,5 +42,5 @@ module.exports = async function (req, res) {
                 main_response.desc = "E-mail or Password is incorrect"
             }
 
-    return res.json(main_response)
+    return res.json(main_response);
 }

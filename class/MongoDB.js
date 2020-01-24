@@ -2,8 +2,8 @@ const MongoClient = require('mongodb').MongoClient;
 const { ObjectId } = require('mongodb');
 require('dotenv').config()
 
-const MONGODB_HOST = process.env.DB_HOST;
-const MONGODB_PORT = 27017;
+const MONGODB_HOST = process.env.MONGODB_HOST;
+const MONGODB_PORT = process.env.MONGODB_PORT;
 
 /**
  * Mongo DB Class For Easy Command
@@ -15,8 +15,8 @@ class MongoDB {
    * @param collectionName
    */
   constructor(databaseName, collectionName) {
-    this.user = process.env.DB_USER;
-    this.pass = process.env.DB_PASS;
+    this.user = process.env.MONGODB_USER;
+    this.pass = process.env.MONGODB_PASS;
     this.URL = `mongodb://${this.user}:${this.pass}@${MONGODB_HOST}:${MONGODB_PORT}/admin?socketTimeoutMS=1200000&connectTimeoutMS=1200000`;
     this.set(databaseName, collectionName);
   }
