@@ -73,13 +73,19 @@ module.exports = async function (req, res) {
 
                     if(typeof result[0].keywords !== "string"){
                         result[0].keywords.map((key)=>{
-                                keys.push(new RegExp(`${key}+`, 'i'))
+                                key  = key.replace(/[^a-z0-9]/gi,'');
+                                if(key.length > 0){
+                                    keys.push(new RegExp(`${key}+`, 'i'))
+                                }
                         });
                     }else{
                         result[0].keywords = result[0].keywords.split(',');
                         result[0].keywords.map((key)=>{
+                                key  = key.replace(/[^a-z0-9]/gi,'');
                                 key = key.replace(" ", "");
-                                keys.push(new RegExp(`${key}+`, 'i'))
+                                if(key.length > 0){
+                                    keys.push(new RegExp(`${key}+`, 'i'))
+                                }
                         });
                     }
 
