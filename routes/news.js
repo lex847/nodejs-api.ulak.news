@@ -61,7 +61,7 @@ module.exports = async function (req, res) {
                 
                 result = await new MongoDB('db', 'news').aggregate(
                     [
-                        { $match: { agency: req.params.agency, id: parseInt(req.params.id) } },
+                        { $match: { agency: req.params.agency, id: parseInt(req.params.id), visible: true } },
                         { $limit: 1 },
                         { $project: { _id: false } }
                     ]
