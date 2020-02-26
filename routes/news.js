@@ -10,7 +10,15 @@ module.exports = async function (req, res) {
         result: []
     }
 
-    const redisKey = `${req.url}`;
+    var limit = 50
+
+    if(typeof req.query.limit !== "undefined"){
+        if(req.query.limit <= 50 ){
+            limit = parseInt(req.query.limit);
+        }
+    }
+
+    const redisKey = `${req.url}/${limit}`;
     req.redis.get(redisKey, async (err, reply) => {
         if (reply !== null) {
             if(typeof req.params.id !== "undefined"){
@@ -21,13 +29,6 @@ module.exports = async function (req, res) {
 
         var result = [];
         var related = [];
-        var limit = 50
-
-        if(typeof req.query.limit !== "undefined"){
-            if(req.query.limit <= 50 ){
-                limit = parseInt(req.query.limit);
-            }
-        }
 
             
             /**

@@ -11,8 +11,14 @@ module.exports = async function (req, res) {
     if(typeof req.query.q === "undefined"){
         return res.json(main_response);
     }
+    var limit = 50
 
-    const redisKey = `search/${await new Buffer.from(req.query.q.toString()).toString('base64').toString()}`;
+    if(typeof req.query.limit !== "undefined"){
+        if(req.query.limit <= 50 ){
+            limit = parseInt(req.query.limit);
+        }
+    }
+    const redisKey = `search/${await new Buffer.from(req.query.q.toString()).toString('base64').toString()}/${limit}`;
     req.redis.get(redisKey, async (err, reply) => {
             
             if (reply !== null) {
@@ -21,13 +27,7 @@ module.exports = async function (req, res) {
             }
 
             var result = [];
-            var limit = 50
 
-            if(typeof req.query.limit !== "undefined"){
-                if(req.query.limit <= 50 ){
-                    limit = parseInt(req.query.limit);
-                }
-            }
 
             result = await new MongoDB('db', 'news').findSearch( { $text: { '$search' : req.query.q.toString()  }, visible: true }, limit );
 
