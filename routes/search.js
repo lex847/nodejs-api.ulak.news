@@ -29,7 +29,7 @@ module.exports = async function (req, res) {
             var result = [];
 
 
-            result = await new MongoDB('db', 'news').findSearch( { $text: { '$search' : req.query.q.toString()  }, visible: true }, limit );
+            result = await new MongoDB('db', 'news').findWithProject( { $text: { '$search' : `"${req.query.q.toString()}"`  }, visible: true }, [0, limit], {text: false} );
 
             /**
              * search log

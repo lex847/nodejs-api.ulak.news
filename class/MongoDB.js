@@ -165,13 +165,13 @@ class MongoDB {
       });
     });
   }
-
+ 
   /**
    *
    * @param data
    * @returns {Promise<any>}
    */
-  findSearch(data, limit) {
+  findSiteMap(data, skip=0, limit=50) {
     return new Promise((resolve, reject) => {
       MongoClient.connect(this.URL, { useUnifiedTopology: true, useNewUrlParser: true }, (error, client) => {
         if (error !== null) {
@@ -183,8 +183,73 @@ class MongoDB {
           .db(this.databaseName)
           .collection(this.collectionName)
           .find(data)
+          .sort({_id: 1})
+          .skip(skip)
           .limit(limit)
-          .project({text: false})
+          .toArray((error, docs) => {
+            if (error !== null) {
+              reject(error);
+              this.error = 'Error find any object to collection';
+            }
+
+            resolve(docs);
+            client.close();
+          }); // end of collection
+      });
+    });
+  }
+ 
+  /**
+   *
+   * @param data
+   * @returns {Promise<any>}
+   */
+  count(data={}) {
+    return new Promise((resolve, reject) => {
+      MongoClient.connect(this.URL, { useUnifiedTopology: true, useNewUrlParser: true }, (error, client) => {
+        if (error !== null) {
+          reject(false);
+          this.error = 'Not connected correctly to db!';
+        }
+
+        client
+          .db(this.databaseName)
+          .collection(this.collectionName)
+          .find(data)
+          .count((error, docs) => {
+            if (error !== null) {
+              reject(error);
+              this.error = 'Error find any object to collection';
+            }
+
+            resolve(docs);
+            client.close();
+          })
+      });
+    });
+  }
+
+  /**
+   *
+   * @param data
+   * @returns {Promise<any>}
+   */
+  findWithProject(data, limit=[0,15], project={}, sort={}) {
+    return new Promise((resolve, reject) => {
+      MongoClient.connect(this.URL, { useUnifiedTopology: true, useNewUrlParser: true }, (error, client) => {
+        if (error !== null) {
+          reject(false);
+          this.error = 'Not connected correctly to db!';
+        }
+
+        client
+          .db(this.databaseName)
+          .collection(this.collectionName)
+          .find(data)
+          .sort(sort)
+          .skip(limit[0])
+          .limit(limit[1])
+          .project(project)
           .toArray((error, docs) => {
             if (error !== null) {
               reject(error);

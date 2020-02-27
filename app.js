@@ -52,9 +52,10 @@ const most_read = require('./routes/most_read');
 const agencies = require('./routes/agencies');
 const search = require('./routes/search');
 const last_searches = require('./routes/last_searches');
-const login = require('./routes/login');
 const categories = require('./routes/categories');
 const category = require('./routes/category');
+const login = require('./routes/login');
+const sitemap = require('./routes/sitemap');
 
 
 /**
@@ -74,6 +75,7 @@ app.get('/last_searches', middlewares, last_searches);
 app.get('/categories', middlewares, categories);
 app.get('/category/:id', middlewares, category);
 app.post('/login', login);
+app.get('/sitemap_:end?.xml', sitemap);
 
 
 /**
