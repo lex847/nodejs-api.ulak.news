@@ -70,13 +70,13 @@ module.exports = async function (req, res) {
         
                 if(result.length > 0){
 
-                    var keys = [];
+                    var keys = '';
 
                     if(typeof result[0].keywords !== "string"){
                         result[0].keywords.map((key)=>{
                                 key  = key.replace(/[^a-z0-9]/gi,'');
                                 if(key.length > 0){
-                                    keys.push(new RegExp(`${key}+`, 'i'))
+                                    keys = keys.concat(key+" ");
                                 }
                         });
                     }else{
@@ -85,17 +85,17 @@ module.exports = async function (req, res) {
                                 key  = key.replace(/[^a-z0-9]/gi,'');
                                 key = key.replace(" ", "");
                                 if(key.length > 0){
-                                    keys.push(new RegExp(`${key}+`, 'i'))
+                                    keys = keys.concat(key+" ");
                                 }
                         });
                     }
 
                     related = await new MongoDB('db', 'news').aggregate(
                         [
-                            { $match: { keywords: { $in: keys }, categories: { $in: result[0].categories }, visible: true } },
+                            { $match: {$text: {'$search': keys} , categories: { $in: result[0].categories }, visible: true } },
                             { $sort: { date_u: -1 } },
-                            { $limit: 5 },
-                            { $project: { _id: false, text: false, categories: false, keywords: false, saved_date: false, seo_link: false, url: false  } }
+                            { $limit: 3 },
+                            { $project: { _id: false, text: false, categories: false, keywords: false, saved_date: false, url: false  } }
                         ]
                     )
                     /**
