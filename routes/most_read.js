@@ -45,18 +45,14 @@ module.exports = async function (req, res) {
 
                 query.push({ $sort: { read_times: -1 } });
                 query.push({ $limit: limit });
-                query.push({ $project: { _id: false, keywords: false } });
+                query.push({ $project: { _id: false, keywords: false, text: false } });
 
                 result = await new MongoDB('db', 'news').aggregate(query);
                 if(result.length > 0){
-                    if(agency === "sozcu"){
-                        replace = 'aip(\'pageStructure\', {\"pageUrl\":\"https:\\/\\/www.sozcu.com.tr\\/apiv2\",\"pageCanonical\":\"https:\\/\\/www.sozcu.com.tr\\/apiv2\",\"pageType\":\"diger\",\"pageIdentifier\":\"\",\"pageCategory1\":\"sozcu\",\"pageCategory2\":\"\",\"pageCategory3\":\"\",\"pageCategory4\":\"\",\"pageCategory5\":\"\",\"pageTitle\":\" - S\\u00f6zc\\u00fc Gazetesi\"});';
-                        result[0].text = result[0].text.replace(replace, '');
-                    }
                     main_response.desc = "OK";
                     main_response.result = result;
                     main_response.status = true;
-                    req.redis.set(redisKey, JSON.stringify(main_response), 'EX', 7200); // seconds ttl
+                    req.redis.set(redisKey, JSON.stringify(main_response), 'EX', 3600); // seconds ttl
                 }else{
                     main_response.desc = "Not found"
                 }

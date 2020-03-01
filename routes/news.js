@@ -93,7 +93,6 @@ module.exports = async function (req, res) {
                     related = await new MongoDB('db', 'news').aggregate(
                         [
                             { $match: {$text: {'$search': keys} , categories: { $in: result[0].categories }, visible: true } },
-                            { $sort: { date_u: -1 } },
                             { $limit: 3 },
                             { $project: { _id: false, text: false, categories: false, keywords: false, saved_date: false, url: false  } }
                         ]

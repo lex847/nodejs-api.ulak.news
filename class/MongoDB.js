@@ -313,22 +313,20 @@ class MongoDB {
   /**
    *
    * @param query
-   * @param dbName
-   * @param collectionName
    * @returns {Promise<any>}
    */
-  delete(query, dbName, collectionName) {
+  delete(query) {
     return new Promise((resolve, reject) => {
       MongoClient.connect(this.URL, { useUnifiedTopology: true, useNewUrlParser: true }, (error, client) => {
         if (error !== null) {
           reject('Not cnnected correctly to server!'+error);
         }
         client
-          .db(dbName)
-          .collection(collectionName)
+          .db(this.databaseName)
+          .collection(this.collectionName)
           .deleteMany(query, (error, obj) => {
             if (error !== null) {
-              reject('Error insert mant object to collection');
+              console.log(error)
             }
             resolve(true);
 
