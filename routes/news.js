@@ -102,7 +102,7 @@ module.exports = async function (req, res) {
                      */
                     new MongoDB('db', 'news').update( { agency: req.params.agency, id: parseInt(req.params.id) }, { $inc: { read_times: 1 } }, false );
                     if(req.params.agency === "sozcu"){
-                        replace = 'aip(\'pageStructure\', {\"pageUrl\":\"https:\\/\\/www.sozcu.com.tr\\/apiv2\",\"pageCanonical\":\"https:\\/\\/www.sozcu.com.tr\\/apiv2\",\"pageType\":\"diger\",\"pageIdentifier\":\"\",\"pageCategory1\":\"sozcu\",\"pageCategory2\":\"\",\"pageCategory3\":\"\",\"pageCategory4\":\"\",\"pageCategory5\":\"\",\"pageTitle\":\" - S\\u00f6zc\\u00fc Gazetesi\"});';
+                        replace = 'aip(\'pageStructure\', {\"pageUrl\":\"https:\\/\\/www.sozcu.com.tr\\/wp-json\\/wp\\/v2\\/posts\\/'+parseInt(req.params.id)+'\",\"pageCanonical\":\"https:\\/\\/www.sozcu.com.tr\\/wp-json\\/wp\\/v2\\/posts\\/'+parseInt(req.params.id)+'\",\"pageType\":\"diger\",\"pageIdentifier\":\"\",\"pageCategory1\":\"sozcu\",\"pageCategory2\":\"\",\"pageCategory3\":\"\",\"pageCategory4\":\"\",\"pageCategory5\":\"\",\"pageTitle\":\" - S\\u00f6zc\\u00fc Gazetesi\"})';
                         result[0].text = result[0].text.replace(replace, '');
                     }
                     result[0].related = related;

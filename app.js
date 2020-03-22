@@ -56,6 +56,7 @@ const categories = require('./routes/categories');
 const category = require('./routes/category');
 const login = require('./routes/login');
 const sitemap = require('./routes/sitemap');
+const cron = require('./routes/cron');
 
 
 /**
@@ -76,6 +77,7 @@ app.get('/categories', middlewares, categories);
 app.get('/category/:id', middlewares, category);
 app.post('/login', login);
 app.get('/sitemap_:end?.xml', sitemap);
+app.get('/cron', main_middleware, cron);
 
 
 /**
