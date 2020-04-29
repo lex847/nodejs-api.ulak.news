@@ -56,6 +56,7 @@ module.exports = async function (req, res) {
         await get_news('diken');
         await get_news('haberturk');
         await get_news('sozcu');
+        await get_news('halkweb');
         var newsProcess = newsData.map(async (news)=>{
             return get_new(news.agency, news.id);
         });

@@ -19,7 +19,7 @@ module.exports = async function (req, res) {
 
     var count = [];
     var db_data = [];
-    var divisor = 40000;
+    var divisor = 15000;
     var maxPage = 1;
     var start = 0;
 
@@ -45,14 +45,15 @@ module.exports = async function (req, res) {
     
     
 
-    db_data = await new MongoDB('db', 'news').findWithProject({}, [start, end], {seo_link: true}, {id: 1});
+    db_data = await new MongoDB('db', 'news').findWithProject({}, [start, end], {seo_link: true}, {_id: 1});
 
     db_data.map(data=>{
         data.seo_link = data.seo_link.replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/'/g, "&#039;")
+        .replace(/[+?+&*!'`#^%]/g, "");
         middle_response = middle_response+`<url><loc>https://ulak.news/${data.seo_link}</loc></url>\n`
     })
 
