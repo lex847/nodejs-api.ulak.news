@@ -31,6 +31,7 @@ module.exports = async function (req, res) {
         .replace(/'/g, "")
         .replace('|', "")
         .replace('---', "")
+        .replace(/[^\x00-\x7F]/g, "")
         .replace(/[+?+&*!'`#^%]/g, "");
         data.seo_link = data.seo_link.replace(/\s/g, '');
         let cat = '';

@@ -59,6 +59,7 @@ const sitemap = require('./routes/sitemap');
 const sitemap_news = require('./routes/sitemap_news');
 const atom_news = require('./routes/atom_news');
 const cron = require('./routes/cron');
+const cron_social = require('./routes/cron_social');
 
 
 /**
@@ -82,6 +83,7 @@ app.get('/sitemap_:cat?.xml', sitemap);
 app.get('/sitemapnews_:cat?.xml', sitemap_news);
 app.get('/atom_:cat?.xml', atom_news);
 app.get('/cron', main_middleware, cron);
+app.get('/cron_social', main_middleware, cron_social);
 
 
 /**
