@@ -30,6 +30,7 @@ module.exports = async function (req, res) {
         .replace(/"/g, "")
         .replace(/'/g, "")
         .replace('|', "")
+        .replace('---', "")
         .replace(/[+?+&*!'`#^%]/g, "");
         data.seo_link = data.seo_link.replace(/\s/g, '');
         let cat = '';
@@ -43,8 +44,8 @@ module.exports = async function (req, res) {
         <link>https://ulak.news/${data.seo_link}</link>
         `+cat+`
         <title><![CDATA[${unescape(data.title)}]]></title>
-        <description><![CDATA[<img src="${data.image}"/> ${data.title}...]]></description>
-        <pubDate>${moment(data.date_u, 'X').format('ddd, DD MMM YYYY HH:mm:ss')} GMT</pubDate>
+        <description><![CDATA[<img src="${data.image}"/> ${data.title}...<a href="https://ulak.news/${data.seo_link}">Devamı için tıklayınız</a>]]></description>
+        <pubDate>${moment(data.date_u, 'X').format('ddd, DD MMM YYYY HH:mm:ss')} +0300</pubDate>
         <atom:link href="https://ulak.news/${data.seo_link}"/>
         </item>\n`
     })

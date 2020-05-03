@@ -46,6 +46,7 @@ module.exports = async function (req, res) {
         .replace(/"/g, "")
         .replace(/'/g, "")
         .replace('|', "")
+        .replace('---', "-")
         .replace(/[+?+&*!'`#^%]/g, "");
         data.seo_link = data.seo_link.replace(/\s/g, '');
         middle_response = middle_response+`<url><loc>https://ulak.news/${data.seo_link}</loc></url>\n`
