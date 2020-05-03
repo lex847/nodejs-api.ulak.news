@@ -15,7 +15,7 @@ module.exports = async function (req, res) {
     async function get_news(agency, limit=1000, start=0){
         console.log("Kron | Başladı => "+agency+" - "+req.moment.format('Y.MM.DD HH:m:s'));
         let response = []
-        response = await axios(`https://api.ulak.news/?agency=${agency}&limit=${limit}&start=${start}`, {
+        response = await axios(`https://api.ulak.news/?agency=${agency}&v=`+req.moment.format('X'), {
                 headers: {
                     'X-Site': process.env.CURL_AUTH,
                     'X-Site-Token': process.env.CURL_TOKEN
