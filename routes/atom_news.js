@@ -12,11 +12,12 @@ module.exports = async function (req, res) {
     var middle_response = ``;
 
     var db_data = [];
-
     if(typeof cat === "undefined"){
         return res.end("");
     }else{
+      if(cat !== "sondakika"){
         query.categories = cat.toString();
+      }
     }
 
     console.log();
