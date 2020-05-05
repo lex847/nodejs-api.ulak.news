@@ -81,7 +81,7 @@ app.get('/category/:id', middlewares, category);
 app.post('/login', login);
 app.get('/sitemap_:cat?.xml', sitemap);
 app.get('/sitemapnews_:cat?.xml', sitemap_news);
-app.get('/atom_:cat?.xml', atom_news);
+app.get('/atom_:cat?.xml', main_middleware, atom_news);
 app.get('/cron', main_middleware, cron);
 app.get('/cron_social', main_middleware, cron_social);
 

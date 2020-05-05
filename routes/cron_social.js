@@ -33,7 +33,7 @@ module.exports = async function (req, res) {
         if(response.length > 0){
             response.map((re)=>{
                 newsData.push(re);
-            })
+            });
         }else{
             console.log("Kron Tweet | HATA => Haberler alınamadı! - "+req.moment.format('Y.MM.DD HH:m:s')); 
         }
@@ -59,6 +59,10 @@ module.exports = async function (req, res) {
                     
                     T.post('media/metadata/create', meta_params, function (err, data, response) {
                         if (!err) {
+                            news.title = news.title.replace(/&#8217;/g, "'")
+                            .replace(/&#8230;/g, "'")
+                            .replace(/&#039;/g, "'")
+                            .replace(/&#8216;/g, "‘");
                             // now we can reference the media and post a tweet (media will attach to the tweet)
                             var params = { status: decode(news.title, 'all').substring(0, 200)+`... ===>> https://ulak.news/${news.seo_link}`+' --- #sondakika #haber #sondakikahaber #haberler', media_ids: [mediaIdStr] }
                             T.post('statuses/update', params, function (err, data, response) {
