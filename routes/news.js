@@ -72,21 +72,27 @@ module.exports = async function (req, res) {
 
                     var keys = '';
 
+                    var limitKey = 10;
+
                     if(typeof result[0].keywords !== "string"){
-                        result[0].keywords.map((key)=>{
+                        result[0].keywords.map((key, i)=>{
+                            if(limitKey<i){
                                 key  = key.replace(/[^a-z0-9]/gi,'');
                                 if(key.length > 0){
                                     keys = keys.concat(key+" ");
                                 }
+                            }
                         });
                     }else{
                         result[0].keywords = result[0].keywords.split(',');
-                        result[0].keywords.map((key)=>{
+                        result[0].keywords.map((key, i)=>{
+                            if(limitKey<i){
                                 key  = key.replace(/[^a-z0-9]/gi,'');
                                 key = key.replace(" ", "");
                                 if(key.length > 0){
                                     keys = keys.concat(key+" ");
                                 }
+                            }
                         });
                     }
 

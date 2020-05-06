@@ -70,6 +70,7 @@ module.exports = async function (req, res) {
                                 console.log("Kron Tweet | Atıldı.");
                             });
                         }else{
+                            console.log(err);
                             console.log("Kron Tweet | ATILAMADI !!");
                         }
                     })
