@@ -1,7 +1,6 @@
 const MongoDB = require('../class/MongoDB');
 require('dotenv').config();
 const Twit = require('twit');
-const imageToBase64 = require('image-to-base64');
 const decode = require('unescape');
 
 var T = new Twit({
@@ -47,35 +46,35 @@ module.exports = async function (req, res) {
 
             if(checkTwit.length < 1){
 
-                var b64content = await imageToBase64(news.image);
-        
-                // first we must post the media to Twitter
-                T.post('media/upload', { media_data: b64content }, function (err, data, response) {
-                    // now we can assign alt text to the media, for use by screen readers and
-                    // other text-based presentations and interpreters
-                    var mediaIdStr = data.media_id_string
-                    var altText = news.title;
-                    var meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
-                    
-                    T.post('media/metadata/create', meta_params, function (err, data, response) {
-                        if (!err) {
-                            news.title = news.title.replace(/&#8217;/g, "'")
-                            .replace(/&#8230;/g, "'")
-                            .replace(/&#039;/g, "'")
-                            .replace(/&#8221;/g, "”")
-                            .replace(/&#8220;/g, "“")
-                            .replace(/&#8216;/g, "‘");
-                            // now we can reference the media and post a tweet (media will attach to the tweet)
-                            var params = { status: decode(news.title, 'all').substring(0, 200)+`... https://ulak.news/${news.seo_link}`+' --- #sondakika #haber #sondakikahaber #haberler', media_ids: [mediaIdStr] }
-                            T.post('statuses/update', params, function (err, data, response) {
-                                new MongoDB('db', 'sociallogs').insert({id: news.id, agency: news.agency, type: platform});
-                                console.log("Kron Tweet | Atıldı.");
-                            });
-                        }else{
-                            console.log(err);
-                            console.log("Kron Tweet | ATILAMADI !!");
-                        }
-                    })
+                news.title = news.title.replace(/&#8217;/g, "'")
+                .replace(/&#8230;/g, "'")
+                .replace(/&#039;/g, "'")
+                .replace(/&#8221;/g, "”")
+                .replace(/&#8220;/g, "“")
+                .replace(/&#8216;/g, "‘");
+
+                var trends = [];
+                var trendsData = await T.get('trends/place', { id: 2344116, count: 5 });
+                if(trendsData.data.length > 0){
+                    if(trendsData.data[0].trends.length > 0){
+                        trendsData.data[0].trends.map((trend, i)=>{
+                            if(i < 5){
+                                trends.push(trend.name);
+                            }
+                        });
+                    }
+                }
+
+                var params = { status: decode(news.title, 'all').substring(0, 200)+`... https://ulak.news/${news.seo_link}`+' --- '+trends.join(' ') };
+
+                T.post('statuses/update', params, function (err, data, response) {
+                    if (!err) {
+                        new MongoDB('db', 'sociallogs').insert({id: news.id, agency: news.agency, type: platform});
+                        console.log("Kron Tweet | Atıldı.");
+                    }else{
+                        console.log(err);
+                        console.log("Kron Tweet | ATILAMADI !!");
+                    }
                 });
             
             }
