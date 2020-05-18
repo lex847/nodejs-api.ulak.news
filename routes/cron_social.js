@@ -62,9 +62,11 @@ module.exports = async function (req, res) {
                             news.title = news.title.replace(/&#8217;/g, "'")
                             .replace(/&#8230;/g, "'")
                             .replace(/&#039;/g, "'")
+                            .replace(/&#8221;/g, "”")
+                            .replace(/&#8220;/g, "“")
                             .replace(/&#8216;/g, "‘");
                             // now we can reference the media and post a tweet (media will attach to the tweet)
-                            var params = { status: decode(news.title, 'all').substring(0, 200)+`... ===>> https://ulak.news/${news.seo_link}`+' --- #sondakika #haber #sondakikahaber #haberler', media_ids: [mediaIdStr] }
+                            var params = { status: decode(news.title, 'all').substring(0, 200)+`... https://ulak.news/${news.seo_link}`+' --- #sondakika #haber #sondakikahaber #haberler', media_ids: [mediaIdStr] }
                             T.post('statuses/update', params, function (err, data, response) {
                                 new MongoDB('db', 'sociallogs').insert({id: news.id, agency: news.agency, type: platform});
                                 console.log("Kron Tweet | Atıldı.");

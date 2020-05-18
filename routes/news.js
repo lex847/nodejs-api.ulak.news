@@ -74,35 +74,36 @@ module.exports = async function (req, res) {
 
                     var limitKey = 10;
 
-                    if(typeof result[0].keywords !== "string"){
-                        result[0].keywords.map((key, i)=>{
-                            if(limitKey<i){
-                                key  = key.replace(/[^a-z0-9]/gi,'');
-                                if(key.length > 0){
-                                    keys = keys.concat(key+" ");
-                                }
-                            }
-                        });
-                    }else{
-                        result[0].keywords = result[0].keywords.split(',');
-                        result[0].keywords.map((key, i)=>{
-                            if(limitKey<i){
-                                key  = key.replace(/[^a-z0-9]/gi,'');
-                                key = key.replace(" ", "");
-                                if(key.length > 0){
-                                    keys = keys.concat(key+" ");
-                                }
-                            }
-                        });
-                    }
+                    // if(typeof result[0].keywords !== "string"){
+                    //     result[0].keywords.map((key, i)=>{
+                    //         if(limitKey<i){
+                    //             key  = key.replace(/[^a-z0-9]/gi,'');
+                    //             if(key.length > 0){
+                    //                 keys = keys.concat(key+" ");
+                    //             }
+                    //         }
+                    //     });
+                    // }else{
+                    //     result[0].keywords = result[0].keywords.split(',');
+                    //     result[0].keywords.map((key, i)=>{
+                    //         if(limitKey<i){
+                    //             key  = key.replace(/[^a-z0-9]/gi,'');
+                    //             key = key.replace(" ", "");
+                    //             if(key.length > 0){
+                    //                 keys = keys.concat(key+" ");
+                    //             }
+                    //         }
+                    //     });
+                    // }
 
-                    related = await new MongoDB('db', 'news').aggregate(
-                        [
-                            { $match: {$text: {'$search': keys} , categories: { $in: result[0].categories }, visible: true } },
-                            { $limit: 3 },
-                            { $project: { _id: false, text: false, categories: false, keywords: false, saved_date: false, url: false  } }
-                        ]
-                    )
+                    // related = await new MongoDB('db', 'news').aggregate(
+                    //     [
+                    //         { $match: {$text: {'$search': keys} , categories: { $in: result[0].categories }, visible: true } },
+                    //         { $limit: 3 },
+                    //         { $project: { _id: false, text: false, categories: false, keywords: false, saved_date: false, url: false  } }
+                    //     ]
+                    // )
+                    
                     /**
                      * increase read_times
                      */
@@ -111,7 +112,7 @@ module.exports = async function (req, res) {
                         replace = 'aip(\'pageStructure\', {\"pageUrl\":\"https:\\/\\/www.sozcu.com.tr\\/wp-json\\/wp\\/v2\\/posts\\/'+parseInt(req.params.id)+'\",\"pageCanonical\":\"https:\\/\\/www.sozcu.com.tr\\/wp-json\\/wp\\/v2\\/posts\\/'+parseInt(req.params.id)+'\",\"pageType\":\"diger\",\"pageIdentifier\":\"\",\"pageCategory1\":\"sozcu\",\"pageCategory2\":\"\",\"pageCategory3\":\"\",\"pageCategory4\":\"\",\"pageCategory5\":\"\",\"pageTitle\":\" - S\\u00f6zc\\u00fc Gazetesi\"})';
                         result[0].text = result[0].text.replace(replace, '');
                     }
-                    result[0].related = related;
+                    result[0].related = [];
                     main_response.desc = "OK";
                     main_response.result = result;
                     main_response.status = true;

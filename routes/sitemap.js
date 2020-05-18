@@ -3,7 +3,6 @@ const MongoDB = require('../class/MongoDB');
 module.exports = async function (req, res) {
     res.set('Content-Type', 'text/xml');
     var { end } = req.params;
-
     var first_response =`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9">\n\n`;
     var end_response = `\n</urlset>`;
 
@@ -46,7 +45,7 @@ module.exports = async function (req, res) {
         .replace(/"/g, "")
         .replace(/'/g, "")
         .replace('|', "")
-        .replace('---', "-")
+        .replace('---', "")
         .replace(/[^\x00-\x7F]/g, "")
         .replace(/[+?+&*!'`#^%]/g, "");
         data.seo_link = data.seo_link.replace(/\s/g, '');
