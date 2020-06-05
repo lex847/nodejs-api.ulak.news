@@ -34,9 +34,8 @@ module.exports = async function (req, res) {
     start = parseInt(start);
     end = parseInt(divisor*end);
     
-    
 
-    db_data = await new MongoDB('db', 'news').findWithProject({}, [start, end], {seo_link: true}, {_id: 1});
+    db_data = await new MongoDB('db', 'news').findWithProject({ visible: true }, [start, 15000], {seo_link: true}, {_id: 1});
 
     db_data.map(data=>{
         data.seo_link = data.seo_link.replace(/&/g, "&amp;")

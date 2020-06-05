@@ -54,18 +54,18 @@ module.exports = async function (req, res) {
                 .replace(/&#8216;/g, "‘");
 
                 var trends = [];
-                var trendsData = await T.get('trends/place', { id: 2344116, count: 5 });
+                var trendsData = await T.get('trends/place', { id: 2344116, count: 2 });
                 if(trendsData.data.length > 0){
                     if(trendsData.data[0].trends.length > 0){
                         trendsData.data[0].trends.map((trend, i)=>{
-                            if(i < 5){
+                            if(i <= 2){
                                 trends.push(trend.name);
                             }
                         });
                     }
                 }
 
-                var params = { status: decode(news.title, 'all').substring(0, 200)+`... https://ulak.news/${news.seo_link}`+' --- '+trends.join(' ') };
+                var params = { status: decode(news.title, 'all').substring(0, 200)+`... https://ulak.news/${news.seo_link}`+' --- #sondakika #haber #sondakikahaber #haberler' };
 
                 T.post('statuses/update', params, function (err, data, response) {
                     if (!err) {

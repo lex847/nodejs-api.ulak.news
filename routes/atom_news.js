@@ -25,7 +25,7 @@ module.exports = async function (req, res) {
 
     res.set('Content-Type', 'text/xml');
     var { cat } = req.params;
-    var query = {};
+    var query = { visible: true };
     
 
     if(typeof cat === "undefined" || typeof req.query.to === "undefined"){

@@ -12,7 +12,7 @@ module.exports = async function (req, res) {
             .replace(/'/g, "&#039;");
     }
     var { cat } = req.params;
-    var query = {};
+    var query = { visible: true };
     
     var first_response =`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"       
     xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n\n`;
